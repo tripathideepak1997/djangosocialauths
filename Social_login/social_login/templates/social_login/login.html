@@ -1,0 +1,69 @@
+{% extends 'social_login/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block login_logout %}
+<style>
+#short-time-msg {
+    color: #3f5fbf;
+    background: #73fbaf;
+    font-weight:bolder;
+}
+</style>
+
+ <div class="card bg-light">
+<br>
+
+     <h6 id = "short-time-msg" class="card-title mt-3 alert-info " >Login With your username sent to your mail while registration !!</h6>
+
+     <article class="card-body mx-auto" style="max-width: 400px;">
+	<h4 class="card-title mt-3 text-center">LogIn (Username/Phone)</h4>
+         {% if messages %}
+             {% for msg in messages %}
+                 <h6 id="message-error" class="card-title mt-3 alert-info ">{{ msg }}</h6>
+             {% endfor %}
+         {% endif %}
+
+	<form method="POST" enctype="multipart/form-data" autocomplete="off" action="{% url 'login' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" name="username" placeholder="Username/Phone">
+        </div>
+        <span> </span>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" name="password" placeholder="Password">
+        </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block"> LogIn </button>
+    </div> <!-- form-group// -->
+         <p class="text-center">Need an account? <a href="{% url 'sign_up' %} ">SignUp</a> </p>
+</form>
+
+         <br>
+         <br>
+         <br>
+         <br>
+</article>
+
+</div> <!-- card.// -->
+
+
+   <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript">
+      $(document).ready( function() {
+        $('#short-time-msg').delay(5000).fadeOut();
+      });
+    </script>
+
+      <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript">
+      $(document).ready( function() {
+        $('#message-error').delay(1000).fadeOut();
+      });
+    </script>
+
+
+{% endblock %}

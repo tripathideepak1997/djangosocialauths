@@ -1,0 +1,38 @@
+{% extends 'social_login/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{%  block login_logout %}
+
+
+<div class="card bg-light">
+<article class="card-body mx-auto" style="max-width: 400px;">
+    {% if messages %}
+        {% for msg in messages %}
+        <h6 id = "message" class="card-title mt-3 alert-info " >{{ msg }}</h6>
+        {% endfor %}
+    {% endif %}
+	<h4 class="card-title mt-3 text-center">{{user.username |capfirst}}</h4>
+    <img class="card-img-top img-fluid zoom" style="border-radius: 50%;" src="{{ user.profile_photo.url }}">
+	<form method="POST" enctype="multipart/form-data" autocomplete="off">
+        {% csrf_token %}
+        {{ form|crispy }}
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block"> Update Account  </button>
+    </div> <!-- form-group// -->
+</form>
+</article>
+</div> <!-- card.// -->
+
+    <br>
+    <br>
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript">
+      $(document).ready( function() {
+        $('#message').delay(1000).fadeOut();
+      });
+    </script>
+
+{% endblock %}
