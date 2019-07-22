@@ -1,0 +1,51 @@
+{% extends 'social_login/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{%  block login_logout %}
+
+<div class="card bg-light">
+<br>
+
+   <article class="card-body mx-auto" style="max-width: 400px;">
+	<h4 class="card-title mt-3 text-center">Verify Number With Otp</h4>
+         {% if messages %}
+             {% for msg in messages %}
+                 <h6 id="message-error" class="card-title mt-3 alert-info ">{{ msg }}</h6>
+             {% endfor %}
+         {% endif %}
+	<form name="form1" method="POST" enctype="multipart/form-data" autocomplete="off" action="{% url 'phone_verify' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" disabled value="{{ phone_number | truncatechars:6 | add:"XXXXX" }}">
+        </div>
+
+        <div class="form-group">
+          <input type="number" name="otp" placeholder="Enter the OTP">
+        </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block"> Verify the OTP </button>
+    </div> <!-- form-group// -->
+
+</form>
+   <a href="{% url 'login' %}"><button type="submit" class="btn btn-primary btn-block">Skip</button> </a>
+         <br>
+         <br>
+         <br>
+         <br>
+</article>
+
+</div> <!-- card.// -->
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript">
+      $(document).ready( function() {
+        $('#message-error').delay(1000).fadeOut();
+      });
+      </script>
+
+
+{% endblock %}
+
