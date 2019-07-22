@@ -18,6 +18,7 @@ GENDER_CHOICE = (
 class User(AbstractUser):
     gender = models.CharField(max_length=10, choices=GENDER_CHOICE)
     phone_number = models.BigIntegerField(blank=True, null=True)
+    is_phone_verified = models.BooleanField(default=False)
     profile_photo = models.ImageField(upload_to='pic_folder/', default='pic_folder/None/no-img.jpeg')
     url = models.CharField(max_length=1000, blank=True, null=True)
 

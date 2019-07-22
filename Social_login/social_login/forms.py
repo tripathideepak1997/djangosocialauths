@@ -4,7 +4,8 @@ from crispy_forms.helper import FormHelper
 from django.contrib.auth.forms import UserCreationForm
 from crispy_forms.layout import Layout, Field
 from django.forms import ModelForm
-
+from django import forms
+from pyotp import totp
 from .models import User
 
 
@@ -15,6 +16,9 @@ def phone_number_validation(phone_number):
         msg = "Phone number must be in Indian Format +91 "\
               "Eg : 977587666,0 9754845789,0-9778545896,+91 9456211568, " \
               "     91 9857842356,919578965389,03595-259506,03592 245902"
+    # else :
+    #     if not verify_phone_number(phone_number):
+    #         msg = "Phone number is valid but doesnot exist "
     return msg
 
 
@@ -62,3 +66,7 @@ class UserUpdateForm(ModelForm):
             self.add_error('phone_number', msg_returned)
 
         return cleaned_data
+
+
+class PhoneNumber(forms.Form):
+    otp = forms.IntegerField(help_text="Enter the otp")

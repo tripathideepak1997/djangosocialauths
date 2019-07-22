@@ -1,5 +1,7 @@
 import random
 
+import requests
+from pyotp import TOTP
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -14,23 +16,16 @@ from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import UpdateView
 
+from Social_login import settings
 from Social_login.settings import EMAIL_HOST
-from social_login.forms import UserSignUp, UserUpdateForm
+from social_login.forms import UserSignUp, UserUpdateForm, PhoneNumber
 from social_login.models import User
 from social_login.tokens import account_activation_token
+from social_login.utils import Otp_Verification, generate_username
 
 
 def index(request):
     return render(request, "social_login/base.html")
-
-
-def generate_username(cleaned_data):
-    username = cleaned_data.get('first_name').replace(' ', '_').lower()\
-                       + cleaned_data.get('last_name').lower() + str(random.randint(1, 100))
-    while User.objects.filter(username=username).exists():
-        username = cleaned_data.get('first_name').replace(' ', '_').lower() \
-                   + cleaned_data.get('last_name').lower() + str(random.randint(1, 100))
-    return username
 
 
 def mail_send(to_mail, username, html_content, from_mail=EMAIL_HOST):
@@ -39,6 +34,36 @@ def mail_send(to_mail, username, html_content, from_mail=EMAIL_HOST):
                                  from_mail, [to_mail])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
+
+
+def phone_verification(request):
+    counter = 0
+    form = PhoneNumber()
+
+    otp_verification = Otp_Verification(interval=60)
+
+    if counter == 0:
+        msg = otp_verification.send_otp(request.session.get("phone_number"))
+        messages.info(request, msg)
+
+    counter += 1
+
+    if request.method == "POST":
+        form = PhoneNumber(request.POST)
+        if form.is_valid():
+            counter = 0
+            if otp_verification.expired():
+                messages.error(request, "The session timed out and new otp send !!")
+                return redirect('phone_verify')
+
+            if otp_verification.verify_otp(form.cleaned_data.get("otp")):
+                messages.success(request, "The phone number is verified and now you can login with that")
+                return redirect('login')
+            else:
+                messages.error(request, "The otp entered is wrong")
+                return redirect('phone_verify')
+    return render(request, "social_login/phone_verify.html", {'form': form,
+                                                              'phone_number': request.session.get("phone_number")})
 
 
 def user_register(request):
@@ -62,7 +87,9 @@ def user_register(request):
             })
 
             mail_send(email, username, html_content)
-            return redirect("login")  
+            request.session['phone_number'] = user.phone_number
+
+            return redirect("phone_verify")
 
     return render(request, "social_login/signup.html", {'form': form})
 

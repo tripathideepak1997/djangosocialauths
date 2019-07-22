@@ -215,16 +215,18 @@ SOCIAL_AUTH_GOOGLE_PLUS_SCOPE = [
 'https://www.googleapis.com/auth/userinfo.email',
 'https://www.googleapis.com/auth/userinfo.profile'
 ]
-# SOCIAL_AUTH_GOOGLE_SCOPE = ['email', 'user_link'] # add this
-# SOCIAL_AUTH_GOOGLE_EXTRA_PARAMS = {       # add this
-#   'fields': 'id, name, email, picture.type(large), link'
-# }
-# SOCIAL_AUTH_GOOGLE_EXTRA_DATA = [                 # add this
-#     ('name', 'name'),
-#     ('email', 'email'),
-#     ('picture', 'profile_photo'),
-#     ('link', 'profile_url'),
-# ]
+SOCIAL_AUTH_GOOGLE_SCOPE = ['email', 'user_link'] # add this
+SOCIAL_AUTH_GOOGLE_EXTRA_PARAMS = {       # add this
+  'fields': 'id, name, email, picture.type(large), link'
+}
+SOCIAL_AUTH_GOOGLE_EXTRA_DATA = [                 # add this
+    ('name', 'name'),
+    ('email', 'email'),
+    ('picture', 'profile_photo'),
+    ('link', 'profile_url'),
+]
 
+SERVICE = 'fast2sms'
 
-
+FAST2SMS_API_KEY = "ie7G8CDOoxnS5csqwEZ9XWyRTf13MBzPdJLItlHUpYvgkVaF4jCubTleM3EWSjqFgPvHocx65XU8AzJd"
+MSG91_API_KEY = "285394AZz4ICR1cP5d2d7da2"
